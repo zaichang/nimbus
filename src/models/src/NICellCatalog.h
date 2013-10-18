@@ -69,6 +69,35 @@ typedef CGFloat (^NICellDrawRectBlock)(CGRect rect, id object, UITableViewCell* 
 @property (nonatomic, assign) UITableViewCellStyle cellStyle;
 @end
 
+
+/**
+ * An object for displaying right-aigned text label and a label on the right
+ *
+ *      @ingroup TableCellCatalog
+ */
+@interface NICaptionCellObject : NISubtitleCellObject
+@property (nonatomic, assign) UITableViewCellStyle cellStyle;
+@end
+
+
+/**
+ * An object for displaying a long body of text
+ *
+ * This object maps by default to a NILongTextCell
+ *
+ *      @ingroup TableCellCatalog
+ */
+@interface NILongTextCellObject : NITitleCellObject
+// Designated initializer.
+- (id)initWithTitle:(NSString *)title text:(NSString *)text image:(UIImage *)image;
++ (id)objectWithTitle:(NSString *)title text:(NSString *)text image:(UIImage *)image;
+- (id)initWithTitle:(NSString *)title text:(NSString *)text;
++ (id)objectWithTitle:(NSString *)title text:(NSString *)text;
+@property (nonatomic, copy) NSString* text;
+@property (nonatomic, assign) UITableViewCellStyle cellStyle;
+@end
+
+
 /**
  * A general-purpose cell for displaying text.
  *
@@ -79,6 +108,15 @@ typedef CGFloat (^NICellDrawRectBlock)(CGRect rect, id object, UITableViewCell* 
  */
 @interface NITextCell : UITableViewCell <NICell>
 @end
+
+
+@interface NICaptionCell : NITextCell
+@end
+
+
+@interface NILongTextCell : NITextCell
+@end
+
 
 /**
  * A cell that renders its contents using a block.

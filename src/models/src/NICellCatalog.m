@@ -146,6 +146,67 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+@implementation NICaptionCellObject
+
+-(Class) cellClass
+{
+	return [NICaptionCell class];
+}
+
+@end
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+@implementation NILongTextCellObject
+
+@synthesize text = _text;
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (id)initWithTitle:(NSString *)title text:(NSString *)text image:(UIImage *)image {
+	if ((self = [super initWithTitle:title image:image])) {
+		_text = [text copy];
+		_cellStyle = UITableViewCellStyleSubtitle;
+	}
+	return self;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (id)initWithTitle:(NSString *)title text:(NSString *)text {
+	return [self initWithTitle:title text:text image:nil];
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (id)initWithTitle:(NSString *)title image:(UIImage *)image {
+	return [self initWithTitle:title text:nil image:image];
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
++ (id)objectWithTitle:(NSString *)title text:(NSString *)text image:(UIImage *)image {
+	return [[self alloc] initWithTitle:title text:text image:image];
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
++ (id)objectWithTitle:(NSString *)title text:(NSString *)text {
+	return [[self alloc] initWithTitle:title text:text image:nil];
+}
+
+
+-(Class) cellClass
+{
+	return [NILongTextCell class];
+}
+
+@end
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
 @implementation NITextCell
 
 
@@ -180,6 +241,185 @@
     self.detailTextLabel.text = subtitleObject.subtitle;
   }
   return YES;
+}
+
+@end
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+@implementation NICaptionCell
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+	if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
+		self.selectionStyle = UITableViewCellSelectionStyleDefault;
+
+		self.textLabel.textAlignment = UITextAlignmentRight;
+		self.textLabel.lineBreakMode = UILineBreakModeTailTruncation;
+		self.textLabel.numberOfLines = 1;
+		self.textLabel.adjustsFontSizeToFitWidth = YES;
+		self.textLabel.font = [UIFont boldSystemFontOfSize:13.0];
+		self.textLabel.textColor = [UIColor grayColor];
+		
+		self.detailTextLabel.adjustsFontSizeToFitWidth = YES;
+		self.detailTextLabel.minimumFontSize = 8;
+		self.detailTextLabel.lineBreakMode = UILineBreakModeWordWrap;
+		self.detailTextLabel.numberOfLines = 0;
+		self.detailTextLabel.font = [UIFont systemFontOfSize:16.0];
+	}
+	return self;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)prepareForReuse {
+	[super prepareForReuse];
+	
+	self.imageView.image = nil;
+	self.textLabel.text = nil;
+	self.detailTextLabel.text = nil;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)shouldUpdateCellWithObject:(id)object {
+	if ([object isKindOfClass:[NICaptionCellObject class]]) {
+		NICaptionCellObject* captionObject = object;
+		self.textLabel.text = captionObject.title;
+		self.detailTextLabel.text = captionObject.subtitle;
+		self.imageView.image = captionObject.image;
+	}
+	return YES;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+-(void) layoutSubviews
+{
+	[super layoutSubviews];
+	
+	static CGFloat titleWidth = 90.0;
+	static CGFloat titlePadding = 12.0;
+	CGRect contentViewBounds = self.contentView.bounds;
+	
+	CGRect titleLabelFrame = contentViewBounds;
+	titleLabelFrame.size.width = titleWidth;
+	self.textLabel.frame = titleLabelFrame;
+	
+	CGRect subtitleLabelFrame = contentViewBounds;
+	subtitleLabelFrame.origin.x = titleWidth + titlePadding;
+	subtitleLabelFrame.size.width = contentViewBounds.size.width - subtitleLabelFrame.origin.x;
+	self.detailTextLabel.frame = subtitleLabelFrame;
+}
+
+@end
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+@implementation NILongTextCell
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+	if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
+		self.selectionStyle = UITableViewCellSelectionStyleNone;
+		
+		self.textLabel.textAlignment = UITextAlignmentRight;
+		self.textLabel.lineBreakMode = UILineBreakModeTailTruncation;
+		self.textLabel.numberOfLines = 1;
+		self.textLabel.adjustsFontSizeToFitWidth = YES;
+		self.textLabel.font = [[self class] titleFont];
+		self.textLabel.textColor = [UIColor grayColor];
+		
+		self.detailTextLabel.adjustsFontSizeToFitWidth = NO;
+		self.detailTextLabel.minimumFontSize = 8;
+		self.detailTextLabel.lineBreakMode = UILineBreakModeWordWrap;
+		self.detailTextLabel.numberOfLines = 0;
+		self.detailTextLabel.font = [[self class] textFont];
+	}
+	return self;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)prepareForReuse {
+	[super prepareForReuse];
+	
+	self.imageView.image = nil;
+	self.textLabel.text = nil;
+	self.detailTextLabel.text = nil;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)shouldUpdateCellWithObject:(id)object {
+	if ([object isKindOfClass:[NILongTextCellObject class]]) {
+		NILongTextCellObject* longTextObject = object;
+		self.textLabel.text = longTextObject.title;
+		self.detailTextLabel.text = longTextObject.text;
+		self.imageView.image = longTextObject.image;
+	}
+	return YES;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+-(void) layoutSubviews
+{
+	[super layoutSubviews];
+	
+	static CGFloat xPadding = 12.0;
+	static CGFloat titlePadding = 6.0;
+	CGRect contentViewBounds = self.contentView.bounds;
+	CGFloat cellWidth = contentViewBounds.size.width - 2 * xPadding;
+	
+	CGRect titleLabelFrame = CGRectMake(xPadding, 12.0, 0, 0);
+	titleLabelFrame.size = [self.textLabel sizeThatFits:CGSizeMake(cellWidth, CGFLOAT_MAX)];
+	self.textLabel.frame = titleLabelFrame;
+	
+	CGRect subtitleLabelFrame = CGRectMake(xPadding, CGRectGetMaxY(titleLabelFrame) + titlePadding, 0, 0);
+	subtitleLabelFrame.size = [self.detailTextLabel sizeThatFits:CGSizeMake(cellWidth, CGFLOAT_MAX)];
+	self.detailTextLabel.frame = subtitleLabelFrame;
+}
+
+
++(UIFont*) titleFont
+{
+	return [UIFont boldSystemFontOfSize:13.0];
+}
+
++(UIFont*) textFont
+{
+	return [UIFont systemFontOfSize:14.0];
+}
+
++ (CGFloat)heightForObject:(NILongTextCellObject *)object atIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView {
+	CGFloat height = 12.0;
+	CGFloat cellWidth = tableView.bounds.size.width;
+	
+	if (object.title.length > 0)
+	{
+		UIFont *font = [self titleFont];
+		height += [object.title sizeWithFont:font constrainedToSize:CGSizeMake(cellWidth, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping].height;
+		height += 6.0;
+	}
+	
+	if (object.text.length > 0)
+	{
+		UIFont *font = [self textFont];
+		height += [object.text sizeWithFont:font constrainedToSize:CGSizeMake(cellWidth, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping].height;
+		height += 12.0;
+	}
+
+	height += 12.0;
+
+	return height;
 }
 
 @end
