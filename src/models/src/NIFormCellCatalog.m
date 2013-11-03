@@ -108,6 +108,44 @@ static const CGFloat kDatePickerTextFieldRightMargin = 5;
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+@implementation NILongTextInputFormElement
+
+@synthesize placeholderText = _placeholderText;
+@synthesize value = _value;
+@synthesize font = _font;
+@synthesize cellHeight = _cellHeight;
+@synthesize delegate = _delegate;
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
++ (id)longTextInputElementWithID:(NSInteger)elementID placeholderText:(NSString *)placeholderText value:(NSString *)value delegate:(id<UITextViewDelegate>)delegate {
+	NILongTextInputFormElement* element = [super elementWithID:elementID];
+	element.placeholderText = placeholderText;
+	element.value = value;
+	element.font = [UIFont systemFontOfSize:16.0];
+	element.cellHeight = 0.0;	// By default, the cell conforms to the height of the text
+	element.delegate = delegate;
+	return element;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
++ (id)textInputElementWithID:(NSInteger)elementID placeholderText:(NSString *)placeholderText value:(NSString *)value {
+	return [self longTextInputElementWithID:elementID placeholderText:placeholderText value:value delegate:nil];
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (Class)cellClass {
+	return [NILongTextInputFormElementCell class];
+}
+
+@end
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
 @implementation NISwitchFormElement
 
 @synthesize labelText = _labelText;
@@ -369,6 +407,95 @@ static const CGFloat kDatePickerTextFieldRightMargin = 5;
 - (void)textFieldDidChangeValue {
   NITextInputFormElement* textInputElement = (NITextInputFormElement *)self.element;
   textInputElement.value = _textField.text;
+}
+
+@end
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+@implementation NILongTextInputFormElementCell
+
+@synthesize textView = _textView;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+	if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
+		self.selectionStyle = UITableViewCellSelectionStyleNone;
+		
+		_textView = [[UITextView alloc] init];
+		[_textView setTag:self.element.elementID];
+		_textView.backgroundColor = [UIColor clearColor];
+		[self.contentView addSubview:_textView];
+		
+		[self.textLabel removeFromSuperview];
+	}
+	return self;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)layoutSubviews {
+	[super layoutSubviews];
+	
+	UIEdgeInsets padding = UIEdgeInsetsMake(4, 4, 4, 4);	// Different from NICellContentPadding() because UITextView has internal padding
+	_textView.frame = UIEdgeInsetsInsetRect(self.contentView.bounds, padding);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)prepareForReuse {
+	[super prepareForReuse];
+	
+//	_textView.placeholder = nil;
+	_textView.text = nil;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)shouldUpdateCellWithObject:(NILongTextInputFormElement *)element {
+	if ([super shouldUpdateCellWithObject:element]) {
+//		_textField.placeholder = textInputElement.placeholderText;
+		_textView.text = element.value;
+		_textView.font = element.font;
+		_textView.delegate = element.delegate;
+
+		_textView.tag = self.tag;
+		
+		[self setNeedsLayout];
+		return YES;
+	}
+	return NO;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)textFieldDidChangeValue {
+	NILongTextInputFormElement* textInputElement = (NILongTextInputFormElement *)self.element;
+	textInputElement.value = _textView.text;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
++ (CGFloat)heightForObject:(NILongTextInputFormElement *)object atIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView {
+	CGFloat height = 0.0;
+
+	if (object.cellHeight > 0.0) {
+		height = object.cellHeight;
+	}
+	else {
+		CGFloat cellWidth = tableView.bounds.size.width;
+
+		if (object.value.length > 0)
+		{
+			UIFont *font = object.font;
+			height += [object.value sizeWithFont:font constrainedToSize:CGSizeMake(cellWidth, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping].height;
+			height += 12.0;
+		}
+	}
+	
+	return height;
 }
 
 @end

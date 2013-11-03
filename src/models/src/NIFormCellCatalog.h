@@ -65,6 +65,28 @@
 
 @end
 
+
+/**
+ * A long text input form element.
+ *
+ * Bound to NILongTextInputFormElementCell when using the @link TableCellFactory Nimbus cell factory@endlink.
+ *
+ *      @ingroup TableCellCatalog
+ */
+@interface NILongTextInputFormElement : NIFormElement
+
+// Designated initializer
++ (id)longTextInputElementWithID:(NSInteger)elementID placeholderText:(NSString *)placeholderText value:(NSString *)value delegate:(id<UITextViewDelegate>)delegate;
++ (id)longTextInputElementWithID:(NSInteger)elementID placeholderText:(NSString *)placeholderText value:(NSString *)value;
+
+@property (nonatomic, copy) NSString* placeholderText;
+@property (nonatomic, copy) NSString* value;
+@property (nonatomic, NI_STRONG) UIFont *font;
+@property (nonatomic, assign) CGFloat cellHeight;
+@property (nonatomic, assign) id<UITextViewDelegate> delegate;
+
+@end
+
 /**
  * A switch form element.
  *
@@ -233,6 +255,17 @@
  */
 @interface NITextInputFormElementCell : NIFormElementCell <UITextFieldDelegate>
 @property (nonatomic, readonly, NI_STRONG) UITextField* textField;
+@end
+
+/**
+ * The cell sibling to NILongTextInputFormElement.
+ *
+ * Displays a text view that fills the entire content view, given a specific cell height
+ *
+ *      @ingroup TableCellCatalog
+ */
+@interface NILongTextInputFormElementCell : NIFormElementCell <UITextFieldDelegate>
+@property (nonatomic, readonly, NI_STRONG) UITextView* textView;
 @end
 
 /**

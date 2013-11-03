@@ -162,13 +162,17 @@
 @implementation NILongTextCellObject
 
 @synthesize text = _text;
+@synthesize titleFont = _titleFont;
+@synthesize textFont = _textFont;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (id)initWithTitle:(NSString *)title text:(NSString *)text image:(UIImage *)image {
 	if ((self = [super initWithTitle:title image:image])) {
 		_text = [text copy];
-		_cellStyle = UITableViewCellStyleSubtitle;
+
+		_titleFont = [UIFont boldSystemFontOfSize:13.0];
+		_textFont = [UIFont systemFontOfSize:14.0];
 	}
 	return self;
 }
@@ -241,6 +245,12 @@
     self.detailTextLabel.text = subtitleObject.subtitle;
   }
   return YES;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
++ (CGFloat)heightForObject:(NILongTextCellObject *)object atIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView {
+	return tableView.rowHeight;
 }
 
 @end
@@ -324,6 +334,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 @implementation NILongTextCell
 
+@synthesize textView = _textView;
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -334,14 +346,13 @@
 		self.textLabel.lineBreakMode = UILineBreakModeTailTruncation;
 		self.textLabel.numberOfLines = 1;
 		self.textLabel.adjustsFontSizeToFitWidth = YES;
-		self.textLabel.font = [[self class] titleFont];
 		self.textLabel.textColor = [UIColor grayColor];
 		
-		self.detailTextLabel.adjustsFontSizeToFitWidth = NO;
-		self.detailTextLabel.minimumFontSize = 8;
-		self.detailTextLabel.lineBreakMode = UILineBreakModeWordWrap;
-		self.detailTextLabel.numberOfLines = 0;
-		self.detailTextLabel.font = [[self class] textFont];
+		self.textView = [[UITextView alloc] initWithFrame:CGRectZero];
+		self.textView.backgroundColor = [UIColor clearColor];
+		self.textView.contentInset = UIEdgeInsetsZero;
+		self.textView.editable = NO;
+		[self.contentView addSubview:self.textView];
 	}
 	return self;
 }
@@ -353,7 +364,7 @@
 	
 	self.imageView.image = nil;
 	self.textLabel.text = nil;
-	self.detailTextLabel.text = nil;
+	self.textView.text = nil;
 }
 
 
@@ -362,7 +373,9 @@
 	if ([object isKindOfClass:[NILongTextCellObject class]]) {
 		NILongTextCellObject* longTextObject = object;
 		self.textLabel.text = longTextObject.title;
-		self.detailTextLabel.text = longTextObject.text;
+		self.textLabel.font = longTextObject.titleFont;
+		self.textView.text = longTextObject.text;
+		self.textView.font = longTextObject.textFont;
 		self.imageView.image = longTextObject.image;
 	}
 	return YES;
@@ -375,29 +388,19 @@
 	[super layoutSubviews];
 	
 	static CGFloat xPadding = 12.0;
-	static CGFloat titlePadding = 6.0;
+	static CGFloat titlePadding = 3.0;
 	CGRect contentViewBounds = self.contentView.bounds;
 	CGFloat cellWidth = contentViewBounds.size.width - 2 * xPadding;
 	
-	CGRect titleLabelFrame = CGRectMake(xPadding, 12.0, 0, 0);
+	CGRect titleLabelFrame = CGRectMake(xPadding + 4.0, 12.0, 0, 0);
 	titleLabelFrame.size = [self.textLabel sizeThatFits:CGSizeMake(cellWidth, CGFLOAT_MAX)];
 	self.textLabel.frame = titleLabelFrame;
 	
 	CGRect subtitleLabelFrame = CGRectMake(xPadding, CGRectGetMaxY(titleLabelFrame) + titlePadding, 0, 0);
-	subtitleLabelFrame.size = [self.detailTextLabel sizeThatFits:CGSizeMake(cellWidth, CGFLOAT_MAX)];
-	self.detailTextLabel.frame = subtitleLabelFrame;
+	subtitleLabelFrame.size = [self.textView sizeThatFits:CGSizeMake(cellWidth, CGFLOAT_MAX)];
+	self.textView.frame = subtitleLabelFrame;
 }
 
-
-+(UIFont*) titleFont
-{
-	return [UIFont boldSystemFontOfSize:13.0];
-}
-
-+(UIFont*) textFont
-{
-	return [UIFont systemFontOfSize:14.0];
-}
 
 + (CGFloat)heightForObject:(NILongTextCellObject *)object atIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView {
 	CGFloat height = 12.0;
@@ -405,14 +408,14 @@
 	
 	if (object.title.length > 0)
 	{
-		UIFont *font = [self titleFont];
+		UIFont *font = object.titleFont;
 		height += [object.title sizeWithFont:font constrainedToSize:CGSizeMake(cellWidth, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping].height;
 		height += 6.0;
 	}
 	
 	if (object.text.length > 0)
 	{
-		UIFont *font = [self textFont];
+		UIFont *font = object.textFont;
 		height += [object.text sizeWithFont:font constrainedToSize:CGSizeMake(cellWidth, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping].height;
 		height += 12.0;
 	}
