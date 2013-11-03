@@ -96,7 +96,8 @@ typedef CGFloat (^NICellDrawRectBlock)(CGRect rect, id object, UITableViewCell* 
 - (id)initWithTitle:(NSString *)title text:(NSString *)text;
 + (id)objectWithTitle:(NSString *)title text:(NSString *)text;
 @property (nonatomic, copy) NSString* text;
-@property (nonatomic, assign) UITableViewCellStyle cellStyle;
+@property (nonatomic, NI_STRONG) UIFont *titleFont;
+@property (nonatomic, NI_STRONG) UIFont *textFont;
 @end
 
 
@@ -117,6 +118,9 @@ typedef CGFloat (^NICellDrawRectBlock)(CGRect rect, id object, UITableViewCell* 
 
 
 @interface NILongTextCell : NITextCell
+{
+}
+@property (nonatomic, NI_STRONG) UITextView *textView;
 @end
 
 
