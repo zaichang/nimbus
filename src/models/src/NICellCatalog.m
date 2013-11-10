@@ -328,6 +328,7 @@
 		self.textView.backgroundColor = [UIColor clearColor];
 		self.textView.contentInset = UIEdgeInsetsZero;
 		self.textView.editable = NO;
+		self.textView.scrollEnabled = NO;
 		[self.contentView addSubview:self.textView];
 	}
 	return self;
@@ -364,35 +365,40 @@
 	[super layoutSubviews];
 	
 	static CGFloat xPadding = 12.0;
-	static CGFloat titlePadding = 3.0;
 	CGRect contentViewBounds = self.contentView.bounds;
-	CGFloat cellWidth = contentViewBounds.size.width - 2 * xPadding;
+	CGFloat contentWidth = contentViewBounds.size.width - 2 * xPadding;
 	
-	CGRect titleLabelFrame = CGRectMake(xPadding + 4.0, 12.0, 0, 0);
-	titleLabelFrame.size = [self.textLabel sizeThatFits:CGSizeMake(cellWidth, CGFLOAT_MAX)];
-	self.textLabel.frame = titleLabelFrame;
+	CGFloat y = 12.0;
+	if (self.textLabel.text.length > 0) {
+		CGRect titleLabelFrame = CGRectMake(xPadding + 4.0, y, 0, 0);
+		titleLabelFrame.size = [self.textLabel sizeThatFits:CGSizeMake(contentWidth, CGFLOAT_MAX)];
+		self.textLabel.frame = titleLabelFrame;
+		
+		y += CGRectGetHeight(titleLabelFrame);
+	}
 	
-	CGRect subtitleLabelFrame = CGRectMake(xPadding, CGRectGetMaxY(titleLabelFrame) + titlePadding, 0, 0);
-	subtitleLabelFrame.size = [self.textView sizeThatFits:CGSizeMake(cellWidth, CGFLOAT_MAX)];
+	CGFloat subtitleLabelFrameHeight = contentViewBounds.size.height - y;
+	CGRect subtitleLabelFrame = CGRectMake(xPadding, y, contentWidth, subtitleLabelFrameHeight);
 	self.textView.frame = subtitleLabelFrame;
 }
 
 
 + (CGFloat)heightForObject:(NILongTextCellObject *)object atIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView {
 	CGFloat height = 12.0;
-	CGFloat cellWidth = tableView.bounds.size.width;
+	static CGFloat xPadding = 12.0;
+	CGFloat contentWidth = tableView.frame.size.width - 2 * xPadding;
 	
 	if (object.title.length > 0)
 	{
 		UIFont *font = object.titleFont;
-		height += [object.title sizeWithFont:font constrainedToSize:CGSizeMake(cellWidth, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping].height;
+		height += [object.title sizeWithFont:font constrainedToSize:CGSizeMake(contentWidth, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping].height;
 		height += 6.0;
 	}
 	
 	if (object.text.length > 0)
 	{
 		UIFont *font = object.textFont;
-		height += [object.text sizeWithFont:font constrainedToSize:CGSizeMake(cellWidth, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping].height;
+		height += [object.text sizeWithFont:font constrainedToSize:CGSizeMake(contentWidth, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping].height;
 		height += 12.0;
 	}
 
