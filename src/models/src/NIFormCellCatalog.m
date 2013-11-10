@@ -334,11 +334,18 @@ static const CGFloat kDatePickerTextFieldRightMargin = 5;
 		_textView = [[UITextView alloc] init];
 		[_textView setTag:self.element.elementID];
 		_textView.backgroundColor = [UIColor clearColor];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textViewDidChange:) name:UITextViewTextDidChangeNotification object:_textView];
 		[self.contentView addSubview:_textView];
 		
 		[self.textLabel removeFromSuperview];
 	}
 	return self;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+-(void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UITextViewTextDidChangeNotification object:_textView];
 }
 
 
@@ -378,9 +385,10 @@ static const CGFloat kDatePickerTextFieldRightMargin = 5;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)textFieldDidChangeValue {
-	NILongTextInputFormElement* textInputElement = (NILongTextInputFormElement *)self.element;
-	textInputElement.value = _textView.text;
+- (void)textViewDidChange:(NSNotification*)notification {
+	NILongTextInputFormElement* element = (NILongTextInputFormElement *)self.element;
+	if (element && ![element.value isEqual:_textView.text])
+		element.value = _textView.text;
 }
 
 
