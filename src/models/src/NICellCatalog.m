@@ -255,6 +255,7 @@
 		self.detailTextLabel.lineBreakMode = UILineBreakModeWordWrap;
 		self.detailTextLabel.numberOfLines = 0;
 		self.detailTextLabel.font = [UIFont systemFontOfSize:16.0];
+		self.detailTextLabel.textColor = [UIColor blackColor];
 	}
 	return self;
 }
