@@ -243,6 +243,7 @@
 	if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
 		self.selectionStyle = UITableViewCellSelectionStyleDefault;
 
+		self.textLabel.backgroundColor = [UIColor clearColor];
 		self.textLabel.textAlignment = UITextAlignmentRight;
 		self.textLabel.lineBreakMode = UILineBreakModeTailTruncation;
 		self.textLabel.numberOfLines = 1;
@@ -250,6 +251,7 @@
 		self.textLabel.font = [UIFont boldSystemFontOfSize:13.0];
 		self.textLabel.textColor = [UIColor grayColor];
 		
+		self.detailTextLabel.backgroundColor = [UIColor clearColor];
 		self.detailTextLabel.adjustsFontSizeToFitWidth = YES;
 		self.detailTextLabel.minimumFontSize = 8;
 		self.detailTextLabel.lineBreakMode = UILineBreakModeWordWrap;
