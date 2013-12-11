@@ -274,6 +274,7 @@
 		self.textLabel.adjustsFontSizeToFitWidth = YES;
 		self.textLabel.font = [UIFont boldSystemFontOfSize:13.0];
 		self.textLabel.textColor = [UIColor grayColor];
+		self.textLabel.highlightedTextColor = [UIColor grayColor];
 		
 		self.detailTextLabel.backgroundColor = [UIColor clearColor];
 		self.detailTextLabel.adjustsFontSizeToFitWidth = YES;
@@ -282,6 +283,7 @@
 		self.detailTextLabel.numberOfLines = 0;
 		self.detailTextLabel.font = [UIFont systemFontOfSize:16.0];
 		self.detailTextLabel.textColor = [UIColor blackColor];
+		self.detailTextLabel.highlightedTextColor = [UIColor blackColor];
 	}
 	return self;
 }
