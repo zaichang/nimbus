@@ -79,7 +79,7 @@
 
 @property (nonatomic, copy) NSString* placeholderText;
 @property (nonatomic, copy) NSString* value;
-@property (nonatomic, NI_STRONG) UIFont *font;
+@property (nonatomic, strong) UIFont *font;
 @property (nonatomic, assign) CGFloat cellHeight;
 @property (nonatomic, assign) id<UITextViewDelegate> delegate;
 
@@ -262,7 +262,7 @@
  *      @ingroup TableCellCatalog
  */
 @interface NILongTextInputFormElementCell : NIFormElementCell <UITextFieldDelegate>
-@property (nonatomic, readonly, NI_STRONG) UITextView* textView;
+@property (nonatomic, readonly, strong) UITextView* textView;
 @end
 
 /**

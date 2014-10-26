@@ -31,6 +31,16 @@ typedef CGFloat (^NICellDrawRectBlock)(CGRect rect, id object, UITableViewCell* 
 @property (nonatomic, strong) id object;
 @end
 
+
+@interface NICustomViewCellObject : NICellObject
+// Designated initializer.
+- (id)initWithView:(UIView*)view object:(id)object;
++ (id)objectWithView:(UIView*)block object:(id)object;
+@property (nonatomic, strong) UIView *view;
+@property (nonatomic, strong) id object;
+@end
+
+
 /**
  * An object for displaying a single-line title in a table view cell.
  *
@@ -96,8 +106,8 @@ typedef CGFloat (^NICellDrawRectBlock)(CGRect rect, id object, UITableViewCell* 
 - (id)initWithTitle:(NSString *)title text:(NSString *)text;
 + (id)objectWithTitle:(NSString *)title text:(NSString *)text;
 @property (nonatomic, copy) NSString* text;
-@property (nonatomic, NI_STRONG) UIFont *titleFont;
-@property (nonatomic, NI_STRONG) UIFont *textFont;
+@property (nonatomic, strong) UIFont *titleFont;
+@property (nonatomic, strong) UIFont *textFont;
 @end
 
 
@@ -120,7 +130,11 @@ typedef CGFloat (^NICellDrawRectBlock)(CGRect rect, id object, UITableViewCell* 
 @interface NILongTextCell : NITextCell
 {
 }
-@property (nonatomic, NI_STRONG) UITextView *textView;
+@property (nonatomic, strong) UITextView *textView;
+@end
+
+
+@interface NICustomViewCell : UITableViewCell <NICell>
 @end
 
 
@@ -132,6 +146,7 @@ typedef CGFloat (^NICellDrawRectBlock)(CGRect rect, id object, UITableViewCell* 
 @interface NIDrawRectBlockCell : UITableViewCell <NICell>
 @property (nonatomic, strong) UIView* blockView;
 @end
+
 
 /**
  * Initializes the NITitleCellObject with the given title, image, cellClass, and userInfo.
