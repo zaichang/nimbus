@@ -271,8 +271,8 @@
 		self.selectionStyle = UITableViewCellSelectionStyleDefault;
 
 		self.textLabel.backgroundColor = [UIColor clearColor];
-		self.textLabel.textAlignment = UITextAlignmentRight;
-		self.textLabel.lineBreakMode = UILineBreakModeTailTruncation;
+		self.textLabel.textAlignment = NSTextAlignmentRight;
+		self.textLabel.lineBreakMode = NSLineBreakByTruncatingTail;
 		self.textLabel.numberOfLines = 1;
 		self.textLabel.adjustsFontSizeToFitWidth = YES;
 		self.textLabel.font = [UIFont boldSystemFontOfSize:13.0];
@@ -281,8 +281,8 @@
 		
 		self.detailTextLabel.backgroundColor = [UIColor clearColor];
 		self.detailTextLabel.adjustsFontSizeToFitWidth = YES;
-		self.detailTextLabel.minimumFontSize = 8;
-		self.detailTextLabel.lineBreakMode = UILineBreakModeWordWrap;
+		self.detailTextLabel.minimumScaleFactor = 0.5;
+		self.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
 		self.detailTextLabel.numberOfLines = 0;
 		self.detailTextLabel.font = [UIFont systemFontOfSize:16.0];
 		self.detailTextLabel.textColor = [UIColor blackColor];
@@ -350,8 +350,8 @@
 	if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
 		self.selectionStyle = UITableViewCellSelectionStyleNone;
 		
-		self.textLabel.textAlignment = UITextAlignmentRight;
-		self.textLabel.lineBreakMode = UILineBreakModeTailTruncation;
+		self.textLabel.textAlignment = NSTextAlignmentRight;
+		self.textLabel.lineBreakMode = NSLineBreakByTruncatingTail;
 		self.textLabel.numberOfLines = 1;
 		self.textLabel.adjustsFontSizeToFitWidth = YES;
 		self.textLabel.textColor = [UIColor grayColor];
