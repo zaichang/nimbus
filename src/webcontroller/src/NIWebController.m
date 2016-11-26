@@ -253,10 +253,6 @@
                                | UIViewAutoresizingFlexibleHeight);
   self.webView.scalesPageToFit = YES;
 
-  if ([UIColor respondsToSelector:@selector(underPageBackgroundColor)]) {
-    self.webView.backgroundColor = [UIColor underPageBackgroundColor];
-  }
-
   [self.view addSubview:self.webView];
   [self.view addSubview:self.toolbar];
 
@@ -268,7 +264,7 @@
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
 
-  [self updateToolbarWithOrientation:self.interfaceOrientation];
+  [self updateToolbarWithOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

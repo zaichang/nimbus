@@ -105,6 +105,11 @@ static const CGFloat kDatePickerTextFieldRightMargin = 5;
 	return element;
 }
 
++ (id)longTextInputElementWithID:(NSInteger)elementID placeholderText:(NSString *)placeholderText value:(NSString *)value
+{
+	return [self longTextInputElementWithID:elementID placeholderText:placeholderText value:value delegate:nil];
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 + (id)textInputElementWithID:(NSInteger)elementID placeholderText:(NSString *)placeholderText value:(NSString *)value {
@@ -405,7 +410,16 @@ static const CGFloat kDatePickerTextFieldRightMargin = 5;
 		if (object.value.length > 0)
 		{
 			UIFont *font = object.font;
-			height += [object.value sizeWithFont:font constrainedToSize:CGSizeMake(cellWidth, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping].height;
+
+//			height += [object.value sizeWithFont:font constrainedToSize:CGSizeMake(cellWidth, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping].height;
+			NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+			paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+			CGRect textRect = [object.value boundingRectWithSize:CGSizeMake(cellWidth, CGFLOAT_MAX)
+														 options:NSStringDrawingUsesLineFragmentOrigin
+													  attributes:@{NSFontAttributeName: font, NSParagraphStyleAttributeName: paragraphStyle.copy}
+														 context:nil];
+			height += textRect.size.height;
+			
 			height += 12.0;
 		}
 	}

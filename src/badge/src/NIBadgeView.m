@@ -83,8 +83,8 @@ static const CGFloat kBadgeLineSize = 2.0f;
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
-  CGSize stringSize = [self.text sizeWithFont:self.font];
-  CGSize zeroSize = [@"0" sizeWithFont:self.font];
+	CGSize stringSize = [self.text boundingRectWithFont:self.font].size;
+  CGSize zeroSize = [@"0" boundingRectWithFont:self.font].size;
   CGFloat padding = 0;
   if (sUsesSolidTint) {
     padding = 2;
@@ -146,7 +146,7 @@ static const CGFloat kBadgeLineSize = 2.0f;
 - (void)drawRect:(CGRect)rect {
   CGContextRef context = UIGraphicsGetCurrentContext();
 
-  CGSize textSize = [self.text sizeWithFont:self.font];
+  CGSize textSize = [self.text boundingRectWithFont:self.font].size;
 
   // Used to suppress warning: Implicit conversion shortens 64-bit value into 32-bit value
   const CGFloat pi = (CGFloat)M_PI;
@@ -232,7 +232,7 @@ static const CGFloat kBadgeLineSize = 2.0f;
   [self.textColor set];
   [self.text drawAtPoint:CGPointMake(floorf((rect.size.width - textSize.width) / 2.f) - 0.f,
                                      floorf((rect.size.height - textSize.height) / 2.f) - 2.f)
-                withFont:self.font];
+		  withAttributes:@{NSFontAttributeName: self.font}];
 }
 
 @end

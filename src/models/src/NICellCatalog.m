@@ -423,14 +423,14 @@
 	if (object.title.length > 0)
 	{
 		UIFont *font = object.titleFont;
-		height += [object.title sizeWithFont:font constrainedToSize:CGSizeMake(contentWidth, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping].height;
+		height += [object.title boundingRectWithFont:font constrainedToSize:CGSizeMake(contentWidth, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping].size.height;
 		height += 6.0;
 	}
 	
 	if (object.text.length > 0)
 	{
 		UIFont *font = object.textFont;
-		height += [object.text sizeWithFont:font constrainedToSize:CGSizeMake(contentWidth, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping].height;
+		height += [object.text boundingRectWithFont:font constrainedToSize:CGSizeMake(contentWidth, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping].size.height;
 		height += 12.0;
 	}
 
